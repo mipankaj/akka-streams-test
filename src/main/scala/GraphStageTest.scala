@@ -1,5 +1,3 @@
-
-
 import akka.util.ByteString
 import akka.stream.FlowShape
 import akka.stream.stage._
@@ -10,14 +8,12 @@ import java.security.MessageDigest
 import akka.stream.scaladsl.Source
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
+import default._
 
 object GraphStageTest {
 
   def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem("QuickStart")
-    implicit val materializer = ActorMaterializer()
-    
-    
+
     val longString = "hasra samtra iouiv tillao"
     import scala.collection.immutable.{ Iterable => IIT }
 
@@ -25,7 +21,7 @@ object GraphStageTest {
     val data: scala.collection.immutable.Iterable[(String, ByteString)] = list.map(x => (x, ByteString(x.getBytes)))
 
     val g = Source(data).via(new DigestCalculator("SHA-256"))
-    
+
     g.runForeach { x => println(x) }
 
   }

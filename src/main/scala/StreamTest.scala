@@ -1,31 +1,19 @@
 
-import akka.stream.scaladsl.Source
-import akka.stream.scaladsl.Sink
-import akka.actor.ActorSystem
-import akka.stream.Materializer
-import akka.stream.scaladsl.Keep
-import akka.stream.ActorMaterializer
 import scala.concurrent.Future
-import akka.stream.IOResult
-import akka.util.ByteString
-import akka.stream.scaladsl.FileIO
-import java.nio.file.Paths
-import akka.stream.ThrottleMode
-import scala.concurrent.duration._
-import akka.stream.scaladsl.GraphDSL
-import akka.stream.scaladsl.RunnableGraph
+
+import akka.Done
 import akka.stream.ClosedShape
 import akka.stream.scaladsl.Broadcast
-import akka.Done
 import akka.stream.scaladsl.Flow
-import akka.stream.scaladsl.Zip
-import akka.stream.SourceShape
-import scala.concurrent.Await
+import akka.stream.scaladsl.GraphDSL
+import akka.stream.scaladsl.RunnableGraph
+import akka.stream.scaladsl.Sink
+import akka.stream.scaladsl.Source
+import default.materializer
 
 object StreamTest {
+
   def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem("QuickStart")
-    implicit val materializer = ActorMaterializer()
 
     val source = Source(1 to 100)
 
@@ -49,6 +37,5 @@ object StreamTest {
 
     g.run()
 
-    
   }
 }

@@ -15,15 +15,15 @@ import akka.stream.scaladsl.Broadcast
 import akka.stream.FlowShape
 import akka.stream.SinkShape
 import akka.stream.scaladsl.MergePreferred
+import default._
 
 object FromGraphExamples {
 
   def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem("QuickStart")
-    implicit val materializer = ActorMaterializer()
+    sourceFromGraph()
   }
 
-  def sourceFromGraph(implicit system: ActorSystem, materializer: ActorMaterializer) {
+  def sourceFromGraph() {
     val pairs = Source.fromGraph(GraphDSL.create() { implicit b =>
       import GraphDSL.Implicits._
 
@@ -45,14 +45,14 @@ object FromGraphExamples {
 
   }
 
-  def flowFromGraph(implicit system: ActorSystem, materializer: ActorMaterializer) {
+  def flowFromGraph() {
     val pairUpWithToString =
       Flow.fromGraph(GraphDSL.create() { implicit b =>
         import GraphDSL.Implicits._
 
         // prepare graph elements
         val broadcast = b.add(Broadcast[Int](2))
-        
+
         val zip = b.add(Zip[Int, String]())
 
         // connect the graph
@@ -65,18 +65,17 @@ object FromGraphExamples {
 
     val f = pairUpWithToString.runWith(Source(List(1)), Sink.head)
   }
-  
-  def sinkFromGraph(implicit system: ActorSystem, materializer: ActorMaterializer) {
+
+  def sinkFromGraph() {
     Sink.fromGraph(GraphDSL.create() { implicit b =>
-        import GraphDSL.Implicits._
-        val broadcast = b.add(Broadcast[Int](2))
-      
-        broadcast.out(0) ~> Sink.foreach(println)
-        broadcast.out(1) ~> Sink.foreach(println)
-        
-        SinkShape.of(broadcast.in)
+      import GraphDSL.Implicits._
+      val broadcast = b.add(Broadcast[Int](2))
+
+      broadcast.out(0) ~> Sink.foreach(println)
+      broadcast.out(1) ~> Sink.foreach(println)
+
+      SinkShape.of(broadcast.in)
     })
   }
-  
 
 }

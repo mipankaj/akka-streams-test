@@ -1,4 +1,4 @@
-name := "hello"
+name := "akka-practice"
 
 version := "1.0"
 
