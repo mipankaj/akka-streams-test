@@ -8,6 +8,7 @@ import akka.stream.Fusing
 import akka.stream.scaladsl.Flow
 import scala.concurrent.duration._
 import akka.stream.ThrottleMode
+import akka.stream.scaladsl.Merge
 
 object AllStagesTest {
 
@@ -59,5 +60,15 @@ object AllStagesTest {
     
     
     source.scan(1)((a, b) => b.find { x => x == a }.getOrElse(0)).runWith(sink)
+    
+    
+    val s1 = Source.maybe[Int]
+    val s2 = Source(1 to 100)
+    
+    
+    val s = Source.combine(s2, s1)(Merge(_))
+    
+    
+    
   }
 }
